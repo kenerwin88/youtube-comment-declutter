@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>YouTube Comment Declutter</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <h1>Comment Declutter</h1>
+    <label class="switch" title="Enable or disable filtering">
+      <input type="checkbox" id="enabled">
+      <span class="slider"></span>
+    </label>
+  </header>
+
+  <section class="stats">
+    <div><span id="count">0</span> hidden on this page<span id="disliked"></span></div>
+    <ul id="reasons"></ul>
+  </section>
+
+  <section class="trophy">
+    <h2>Trophy room</h2>
+    <div class="rank">
+      <span id="rankEmoji" class="rank-emoji">👀</span>
+      <div class="rank-text">
+        <div id="rankTitle" class="rank-title">Lurker</div>
+        <div id="rankNext" class="rank-next"></div>
+      </div>
+    </div>
+    <div class="bar"><div id="rankBar" class="bar-fill"></div></div>
+    <div class="totals">
+      <div><b id="totalDisliked">0</b><span>dislikes</span></div>
+      <div><b id="totalHidden">0</b><span>hidden</span></div>
+      <div><b id="streak">0</b><span>day streak</span></div>
+      <div><b id="bestDay">0</b><span>best day</span></div>
+    </div>
+    <ul id="achievements" class="achievements"></ul>
+    <button id="reset" class="link-btn" type="button">Reset stats</button>
+  </section>
+
+  <section>
+    <h2>When a comment matches</h2>
+    <label class="radio"><input type="radio" name="mode" value="collapse"> Collapse to a one-line placeholder with a “Show” button</label>
+    <label class="radio"><input type="radio" name="mode" value="hide"> Hide it completely</label>
+    <label class="radio warn"><input type="checkbox" id="autoDislike"> Also click 👎 on matched comments</label>
+    <p class="hint">Only works when signed in with an account that has a YouTube channel. Each comment is disliked once, spaced 1.5s apart. Automated voting is against YouTube's terms and could get your account flagged, so this is off by default.</p>
+  </section>
+
+  <section>
+    <h2>Built-in filters</h2>
+    <ul id="defaults" class="defaults"></ul>
+  </section>
+
+  <section>
+    <h2>Your own filters</h2>
+    <p class="hint">One per line. Regular expressions are supported; anything that isn't a valid regex is matched as plain text, case-insensitive.</p>
+    <textarea id="custom" rows="5" spellcheck="false" placeholder="e.g.&#10;who else is here from tiktok&#10;^\W*bro\W*$"></textarea>
+  </section>
+
+  <footer>
+    <span id="saved" class="saved">Saved</span>
+  </footer>
+
+  <script src="patterns.js"></script>
+  <script src="awards.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

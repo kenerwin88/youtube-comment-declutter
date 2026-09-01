@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "YouTube Comment Declutter",
+  "version": "1.0.0",
+  "description": "Hides repetitive, low-effort YouTube comments like \"anyone 2026?\", \"who's watching in September?\", \"like if you're still here\".",
+  "permissions": ["storage"],
+  "host_permissions": ["https://www.youtube.com/*", "https://m.youtube.com/*"],
+  "background": { "service_worker": "background.js" },
+  "content_scripts": [
+    {
+      "matches": ["https://www.youtube.com/*", "https://m.youtube.com/*"],
+      "js": ["patterns.js", "content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "YouTube Comment Declutter",
+    "default_icon": { "16": "icons/16.png", "48": "icons/48.png", "128": "icons/128.png" }
+  },
+  "icons": { "16": "icons/16.png", "48": "icons/48.png", "128": "icons/128.png" }
+}

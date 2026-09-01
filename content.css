@@ -1,0 +1,59 @@
+.ytcf-hidden { display: none !important; }
+.ytcf-placeholder {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0 8px 0;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-family: "Roboto", "Arial", sans-serif;
+  font-size: 12px;
+  color: var(--yt-spec-text-secondary, #606060);
+  background: var(--yt-spec-badge-chip-background, rgba(0,0,0,0.05));
+}
+.ytcf-placeholder .ytcf-quote {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 45ch;
+  font-style: italic;
+}
+.ytcf-placeholder button {
+  margin-left: auto;
+  border: none;
+  background: transparent;
+  color: var(--yt-spec-call-to-action, #065fd4);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 500;
+  padding: 2px 6px;
+}
+.ytcf-placeholder button:hover { text-decoration: underline; }
+
+#ytcf-toasts {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 2147483647;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+.ytcf-toast {
+  min-width: 260px;
+  max-width: 360px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: #1f1f1f;
+  color: #fff;
+  font-family: "Roboto", "Arial", sans-serif;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+  border-left: 4px solid #ffd54f;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity .3s ease, transform .3s ease;
+}
+.ytcf-toast.ytcf-toast-in { opacity: 1; transform: translateY(0); }
+.ytcf-toast-title { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+.ytcf-toast-body { font-size: 12px; opacity: .8; }
