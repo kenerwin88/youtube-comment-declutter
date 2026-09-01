@@ -1,6 +1,6 @@
 (function () {
   const $ = (s) => document.querySelector(s);
-  const DEFAULTS = { enabled: true, mode: 'collapse', autoDislike: false, customPatterns: [], disabledDefaults: [] };
+  const DEFAULTS = { enabled: true, mode: 'collapse', autoDislike: false, showBadge: true, customPatterns: [], disabledDefaults: [] };
   let saveTimer = null;
 
   function flashSaved() {
@@ -195,12 +195,14 @@
     $('#enabled').checked = items.enabled !== false;
     document.querySelector(`input[name=mode][value=${items.mode === 'hide' ? 'hide' : 'collapse'}]`).checked = true;
     $('#autoDislike').checked = items.autoDislike === true;
+    $('#showBadge').checked = items.showBadge !== false;
     $('#custom').value = (items.customPatterns || []).join('\n');
     renderDefaults(items.disabledDefaults || []);
   });
 
   $('#enabled').addEventListener('change', (e) => save({ enabled: e.target.checked }));
   $('#autoDislike').addEventListener('change', (e) => save({ autoDislike: e.target.checked }));
+  $('#showBadge').addEventListener('change', (e) => save({ showBadge: e.target.checked }));
   document.querySelectorAll('input[name=mode]').forEach((r) =>
     r.addEventListener('change', (e) => save({ mode: e.target.value }))
   );

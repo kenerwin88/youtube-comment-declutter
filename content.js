@@ -55,6 +55,11 @@
       return;
     }
     if (area !== 'sync') return;
+    if (changes.showBadge && Object.keys(changes).length === 1) {
+      state.hiddenCount = -1; // force a resend so the badge reappears
+      updateCount();
+      return;
+    }
     loadSettings().then(() => {
       // Settings changed: undo everything and re-evaluate from scratch.
       revealAll(false);

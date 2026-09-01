@@ -36,6 +36,7 @@ Clone or download this repo, then:
 Click the toolbar icon to:
 
 - turn filtering on or off
+- show or hide the hidden-comment count on the toolbar icon
 - choose collapse vs. hide
 - toggle individual built-in filters
 - optionally auto-dislike matched comments (off by default; needs an account with a YouTube channel;

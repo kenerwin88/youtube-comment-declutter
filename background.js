@@ -2,7 +2,7 @@
 // All stat writes go through here so multiple YouTube tabs never race.
 importScripts('awards.js');
 
-const SETTINGS_DEFAULTS = { enabled: true, mode: 'collapse', autoDislike: false, customPatterns: [], disabledDefaults: [] };
+const SETTINGS_DEFAULTS = { enabled: true, mode: 'collapse', autoDislike: false, showBadge: true, customPatterns: [], disabledDefaults: [] };
 
 chrome.runtime.onInstalled.addListener(() => {
   chrome.storage.sync.get(SETTINGS_DEFAULTS, (items) => chrome.storage.sync.set(items));
@@ -121,8 +121,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg.type === 'ytcf:count' && sender.tab) {
     const tabId = sender.tab.id;
     const count = Math.max(0, msg.count | 0);
-    chrome.action.setBadgeText({ tabId, text: count ? String(count) : '' });
-    chrome.action.setBadgeBackgroundColor({ tabId, color: '#cc0000' });
+    chrome.storage.sync.get({ showBadge: true }, (items) => {
+      chrome.action.setBadgeText({ tabId, text: items.showBadge && count ? String(count) : '' }).catch(() => {});
+      chrome.action.setBadgeBackgroundColor({ tabId, color: '#cc0000' }).catch(() => {});
+    });
     return false;
   }
 
@@ -142,4 +144,12 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     return true;
   }
   return false;
+});
+
+// Clear every tab's badge the moment the user turns the number off.
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area !== 'sync' || !changes.showBadge || changes.showBadge.newValue) return;
+  chrome.tabs.query({ url: ['https://www.youtube.com/*', 'https://m.youtube.com/*'] }, (tabs) => {
+    for (const t of tabs) chrome.action.setBadgeText({ tabId: t.id, text: '' }).catch(() => {});
+  });
 });
