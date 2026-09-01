@@ -17,8 +17,8 @@
     { name: 'anyone + date', source: `^\\W*${WHO}\\W*(?:still\\s+)?(?:${HERE}\\s*)?(?:in|from|since)?\\W*${WHEN}\\W*$` },
     // "anyone still here in 2026?", "who's watching in september 2026", "who else is listening in 2026"
     { name: 'who is watching in <date>', source: `\\b${WHO}\\b[^.!?\\n]{0,40}\\b${HERE}\\b[^.!?\\n]{0,30}\\b(?:in|from|during)\\s+${DATE}\\b` },
-    // "2026 anyone?", "september 2026 anyone??", "2026 and still here"
-    { name: '<date> anyone', source: `^\\W*${DATE}\\W*(?:and\\s+)?(?:${WHO}|still\\s+here|still\\s+watching|gang|squad|crew|club|check|checking\\s+in)\\W*$` },
+    // "2026 anyone?", "september 2026 anyone??", "2026 and still here", "2026? Anybody? Forever Mac Miller"
+    { name: '<date> anyone', source: `^\\W*${DATE}\\W*(?:and\\s+)?(?:${WHO}|still\\s+here|still\\s+watching|gang|squad|crew|club|check|checking\\s+in)\\s*(?:[?!]|\\W*$)` },
     // "June 2026! Who's listening to this I AM!", "2026 and who's still here?"
     { name: '<date>! who is listening', source: `^\\W*${DATE}\\W+(?:and\\s+)?${WHO}\\b[^\\n]{0,40}\\b${HERE}\\b` },
     // "2026 gang", "2026 squad rise up"
