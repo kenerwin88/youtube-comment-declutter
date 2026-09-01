@@ -7,16 +7,20 @@
     '(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t|tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)';
   const YEAR = '(?:19|20)\\d\\d';
   const DATE = `(?:${MONTH}(?:\\W+${YEAR})?|${YEAR})`;
+  // Same as DATE but also relative phrasings: "anyone today?", "who's here rn"
+  const WHEN = `(?:${DATE}|today|tonight|right\\s+now|rn|this\\s+(?:year|month|week))`;
   const WHO = "(?:any\\s*(?:one|body)(?:\\s+else)?|who(?:'?s|\\s+is|\\s+else(?:\\s+is)?)?)";
   const HERE = '(?:here|watching|listening|still\\s+here|still\\s+watching|still\\s+listening|vibing|around|alive)';
 
   root.YTCF_DEFAULT_PATTERNS = [
-    // "anyone 2026?", "anybody september 2026??", "anyone in 2026", "who is here august 2026?"
-    { name: 'anyone + date', source: `^\\W*${WHO}\\W*(?:still\\s+)?(?:${HERE}\\s*)?(?:in|from|since)?\\W*${DATE}\\W*$` },
+    // "anyone 2026?", "anybody september 2026??", "anyone in 2026", "who is here august 2026?", "anyone today????"
+    { name: 'anyone + date', source: `^\\W*${WHO}\\W*(?:still\\s+)?(?:${HERE}\\s*)?(?:in|from|since)?\\W*${WHEN}\\W*$` },
     // "anyone still here in 2026?", "who's watching in september 2026", "who else is listening in 2026"
     { name: 'who is watching in <date>', source: `\\b${WHO}\\b[^.!?\\n]{0,40}\\b${HERE}\\b[^.!?\\n]{0,30}\\b(?:in|from|during)\\s+${DATE}\\b` },
     // "2026 anyone?", "september 2026 anyone??", "2026 and still here"
     { name: '<date> anyone', source: `^\\W*${DATE}\\W*(?:and\\s+)?(?:${WHO}|still\\s+here|still\\s+watching|gang|squad|crew|club|check|checking\\s+in)\\W*$` },
+    // "June 2026! Who's listening to this I AM!", "2026 and who's still here?"
+    { name: '<date>! who is listening', source: `^\\W*${DATE}\\W+(?:and\\s+)?${WHO}\\b[^\\n]{0,40}\\b${HERE}\\b` },
     // "2026 gang", "2026 squad rise up"
     { name: '<year> gang', source: `\\b${YEAR}\\s+(?:gang|squad|crew|club)\\b` },
     // "still here in 2026", "still watching this in september 2026", "still a banger in 2026"

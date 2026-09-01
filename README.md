@@ -1,4 +1,4 @@
-# 🔇 YouTube Comment Declutter
+# 😡 YouTube Comment Declutter
 
 A Chrome extension that hides the repetitive, low-effort comments that clog up
 every YouTube video:
@@ -12,6 +12,16 @@ every YouTube video:
 Matched comments collapse to a one-line placeholder with a **Show** button (or
 disappear entirely, your choice). Optionally it can also dislike them for you,
 and it keeps a scoreboard with ranks and achievements so you can feel something.
+
+## Screenshots
+
+**Comments on a video, with the junk collapsed:**
+
+![Comment section with five repetitive comments collapsed to one-line placeholders](docs/comments.png)
+
+**The popup (click the 😡 icon):**
+
+<img src="docs/popup.png" alt="Popup showing hidden count, trophy room with rank and achievements, and the settings" width="380">
 
 ---
 
@@ -44,16 +54,16 @@ git clone https://github.com/kenerwin88/youtube-comment-declutter.git
 3. Three new buttons appear in the top-left. Click **Load unpacked**.
 4. In the file picker, select the folder from Step 1 (the one that contains
    `manifest.json`) and click **Select** / **Open**.
-5. "YouTube Comment Declutter" now appears in your extensions list with a 🔇 icon.
+5. "YouTube Comment Declutter" now appears in your extensions list with an 😡 icon.
 
 ### Step 3: Pin it and try it
 
 1. Click the puzzle-piece icon 🧩 to the right of Chrome's address bar.
 2. Find **YouTube Comment Declutter** and click the pin 📌 next to it so the
-   🔇 icon stays visible in your toolbar.
+   😡 icon stays visible in your toolbar.
 3. Open any YouTube video and scroll to the comments. Any YouTube tabs that
    were already open need a reload first.
-4. Click the 🔇 icon to open the settings.
+4. Click the 😡 icon to open the settings.
 
 Works in Chrome, Edge, Brave, Arc, and other Chromium browsers. The steps are
 the same; the extensions page is `edge://extensions` in Edge and
@@ -70,7 +80,7 @@ arrow on the extension's card.
 
 ---
 
-## Settings (click the 🔇 icon)
+## Settings (click the 😡 icon)
 
 - **On/off switch** in the top-right corner.
 - **Collapse vs. hide**: collapse leaves a one-line placeholder with a Show
