@@ -17,7 +17,7 @@ are hidden on the current tab.
 
 If auto-dislike is on, the extension keeps a lifetime scoreboard in the popup:
 total dislikes, total hidden comments, daily streak, best day, a rank that
-climbs from "Anyone Still Here?" to "Final Boss of the Comment Section" as your
+climbs from "Silently Judging" to "Yes, I'm Still Here In 2026. Disliking You Specifically." as your
 dislike count grows, and 19 achievements (e.g. "Who's Disliking at 3AM?" for a
 dislike between midnight and 4am, "Second!" for 25 disliked "first!" comments). Rank-ups and unlocks show a toast on the YouTube page.
 Stats live in `chrome.storage.local` and never leave your browser.
@@ -39,7 +39,9 @@ Click the toolbar icon to:
 - choose collapse vs. hide
 - toggle individual built-in filters
 - optionally auto-dislike matched comments (off by default; needs an account with a YouTube channel;
-  automated voting is against YouTube's terms, so use at your own risk)
+  automated voting is against YouTube's terms, so use at your own risk). Clicks are spaced a random
+  1.5–6 seconds apart, and the extension remembers every comment id it has disliked so nothing is
+  ever disliked twice or toggled back.
 - add your own filters, one per line. Lines are tried as regular expressions
   (case-insensitive); invalid regexes are matched as plain substrings.
 

@@ -44,10 +44,10 @@
     if (next) {
       const span = next.min - rank.min;
       const pct = Math.min(100, Math.round(((stats.disliked - rank.min) / span) * 100));
-      $('#rankNext').textContent = `${next.min - stats.disliked} more to ${next.emoji} ${next.title}`;
+      $('#rankNext').textContent = `${next.min - stats.disliked} more victims until ${next.emoji} ${next.title}`;
       $('#rankBar').style.width = pct + '%';
     } else {
-      $('#rankNext').textContent = 'Max rank. The comment section fears you.';
+      $('#rankNext').textContent = 'Max rank. The comment section speaks your name in whispers.';
       $('#rankBar').style.width = '100%';
     }
     $('#totalDisliked').textContent = stats.disliked.toLocaleString();
@@ -150,10 +150,10 @@
     if (next) {
       const span = next.min - rank.min;
       const pct = Math.min(100, Math.round(((stats.disliked - rank.min) / span) * 100));
-      $('#rankNext').textContent = `${next.min - stats.disliked} more to ${next.emoji} ${next.title}`;
+      $('#rankNext').textContent = `${next.min - stats.disliked} more victims until ${next.emoji} ${next.title}`;
       $('#rankBar').style.width = pct + '%';
     } else {
-      $('#rankNext').textContent = 'Max rank. The comment section fears you.';
+      $('#rankNext').textContent = 'Max rank. The comment section speaks your name in whispers.';
       $('#rankBar').style.width = '100%';
     }
     $('#totalDisliked').textContent = stats.disliked.toLocaleString();

@@ -2,18 +2,18 @@
 (function (root) {
   // Ranks are based on lifetime dislikes.
   root.YTCF_RANKS = [
-    { min: 0, title: 'Anyone Still Here?', emoji: '👀' },
-    { min: 1, title: 'Not Anymore', emoji: '👎' },
-    { min: 10, title: 'Ratio Enjoyer', emoji: '🍿' },
-    { min: 25, title: 'Calendar Police', emoji: '📆' },
-    { min: 50, title: 'First!-Come, First-Served', emoji: '🥇' },
-    { min: 100, title: 'Nobody: Absolutely Nobody: You:', emoji: '🫵' },
-    { min: 250, title: 'Thumbs Down If You Agree', emoji: '🙃' },
-    { min: 500, title: 'Who\'s Disliking In 2026?', emoji: '🗓️' },
-    { min: 1000, title: 'The Reason Comments Get Turned Off', emoji: '🔇' },
-    { min: 2500, title: 'Chief of the Time Police', emoji: '🚔' },
-    { min: 5000, title: 'Still a Banger (Of Dislikes) In 2026', emoji: '💿' },
-    { min: 10000, title: 'Final Boss of the Comment Section', emoji: '👑' },
+    { min: 0, title: 'Silently Judging', emoji: '👀' },
+    { min: 1, title: 'Touched the Button. Felt Nothing.', emoji: '👎' },
+    { min: 10, title: 'Taking Out the Trash', emoji: '🗑️' },
+    { min: 25, title: 'Ban Hammer Apprentice', emoji: '🔨' },
+    { min: 50, title: 'Puts Out "First!" Fires For a Living', emoji: '🧯' },
+    { min: 100, title: 'Serial Ratio-er', emoji: '💀' },
+    { min: 250, title: 'Undertaker of "Anyone 2026?"', emoji: '⚰️' },
+    { min: 500, title: 'Comment Section Demolition Crew', emoji: '🧨' },
+    { min: 1000, title: 'Cold-Blooded Dislike Machine', emoji: '🥶' },
+    { min: 2500, title: 'Timeline Enforcer. Nobody Is Watching In 2026. Not On My Watch.', emoji: '🩸' },
+    { min: 5000, title: 'The Reason YouTube Hid the Dislike Count', emoji: '☠️' },
+    { min: 10000, title: 'Yes, I\'m Still Here In 2026. Disliking You Specifically.', emoji: '🔥' },
   ];
 
   // Each achievement gets the stats object and returns true when unlocked.

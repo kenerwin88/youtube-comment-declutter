@@ -15,6 +15,7 @@
     patterns: [],
     dislikeQueue: [],
     dislikeTimer: null,
+    disliked: new Set(), // comment ids we have already disliked (persisted by the background)
     hiddenCount: 0,
     scanScheduled: false,
   };
@@ -38,7 +39,21 @@
     });
   }
 
+  function loadDisliked() {
+    return new Promise((resolve) => {
+      chrome.storage.local.get({ dislikedIds: {} }, (items) => {
+        state.disliked = new Set(Object.keys(items.dislikedIds || {}));
+        resolve();
+      });
+    });
+  }
+
   chrome.storage.onChanged.addListener((changes, area) => {
+    if (area === 'local' && changes.dislikedIds) {
+      // Another tab disliked something (or stats were reset).
+      state.disliked = new Set(Object.keys(changes.dislikedIds.newValue || {}));
+      return;
+    }
     if (area !== 'sync') return;
     loadSettings().then(() => {
       // Settings changed: undo everything and re-evaluate from scratch.
@@ -67,6 +82,22 @@
   function commentText(commentEl) {
     const el = commentEl.querySelector('#content-text');
     return el ? el.textContent : '';
+  }
+
+  // Stable id for a comment: the "lc" param of its timestamp permalink, which is
+  // YouTube's own comment id. Falls back to author + text if the link is missing.
+  function commentId(commentEl) {
+    const link = commentEl.querySelector('a[href*="lc="]');
+    if (link) {
+      try {
+        const lc = new URL(link.getAttribute('href'), location.href).searchParams.get('lc');
+        if (lc) return lc;
+      } catch (e) {
+        /* fall through */
+      }
+    }
+    const author = (commentEl.querySelector('#author-text') || {}).textContent || '';
+    return 'fallback:' + self.YTCF_normalize(author) + '|' + self.YTCF_normalize(commentText(commentEl)).slice(0, 200);
   }
 
   // --- hiding / revealing ---------------------------------------------------------
@@ -126,13 +157,23 @@
   // Clicks are spaced out and each comment is only ever clicked once, so an
   // already-disliked comment is never toggled back.
 
-  const DISLIKE_INTERVAL_MS = 1500;
+  // Random spacing between clicks so it doesn't look like a metronome.
+  const DISLIKE_MIN_MS = 1500;
+  const DISLIKE_MAX_MS = 6000;
+  function randomDelay() {
+    return DISLIKE_MIN_MS + Math.random() * (DISLIKE_MAX_MS - DISLIKE_MIN_MS);
+  }
 
   function queueDislike(commentEl) {
     if (!state.autoDislike || commentEl.dataset.ytcfDisliked) return;
+    const id = commentId(commentEl);
+    if (state.disliked.has(id)) {
+      commentEl.dataset.ytcfDisliked = 'already';
+      return;
+    }
     commentEl.dataset.ytcfDisliked = 'queued';
     state.dislikeQueue.push(commentEl);
-    if (!state.dislikeTimer) state.dislikeTimer = setTimeout(drainDislikeQueue, 300);
+    if (!state.dislikeTimer) state.dislikeTimer = setTimeout(drainDislikeQueue, 300 + Math.random() * 700);
   }
 
   function drainDislikeQueue() {
@@ -140,18 +181,27 @@
     const el = state.dislikeQueue.shift();
     if (!el) return;
     if (state.autoDislike && el.isConnected) {
+      const id = commentId(el);
       // Never click an <a>: without a channel YouTube renders a /create_channel
       // (or sign-in) link here instead of a toggle button.
       const btn = el.querySelector('#dislike-button button[aria-pressed], #dislike-button [role="button"][aria-pressed]');
-      if (btn && btn.getAttribute('aria-pressed') !== 'true') {
+      if (state.disliked.has(id)) {
+        el.dataset.ytcfDisliked = 'already';
+      } else if (btn && btn.getAttribute('aria-pressed') !== 'true') {
         btn.click();
+        state.disliked.add(id);
         el.dataset.ytcfDisliked = 'clicked';
-        report({ type: 'ytcf:event', kind: 'disliked', reason: containerFor(el).dataset.ytcfReason || '' });
+        report({ type: 'ytcf:event', kind: 'disliked', commentId: id, reason: containerFor(el).dataset.ytcfReason || '' });
+      } else if (btn) {
+        // Already pressed (disliked by hand, or before we started tracking): remember it.
+        state.disliked.add(id);
+        el.dataset.ytcfDisliked = 'already';
+        report({ type: 'ytcf:remember', commentId: id });
       } else {
-        el.dataset.ytcfDisliked = btn ? 'already' : 'unavailable';
+        el.dataset.ytcfDisliked = 'unavailable';
       }
     }
-    if (state.dislikeQueue.length) state.dislikeTimer = setTimeout(drainDislikeQueue, DISLIKE_INTERVAL_MS);
+    if (state.dislikeQueue.length) state.dislikeTimer = setTimeout(drainDislikeQueue, randomDelay());
   }
 
   // --- scoreboard ---------------------------------------------------------------
@@ -274,7 +324,7 @@
 
   // --- boot ---------------------------------------------------------------
 
-  loadSettings().then(() => {
+  Promise.all([loadSettings(), loadDisliked()]).then(() => {
     const observer = new MutationObserver(scheduleScan);
     observer.observe(document.documentElement, { childList: true, subtree: true, characterData: true });
     // YouTube fires this on in-app navigation between videos.

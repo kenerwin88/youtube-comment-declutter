@@ -11,6 +11,9 @@ chrome.runtime.onInstalled.addListener(() => {
   });
 });
 
+// Serialize all read-modify-write cycles on chrome.storage.local.
+let chain = Promise.resolve();
+
 // --- stats ---------------------------------------------------------------
 
 function localDateKey(d) {
@@ -63,8 +66,6 @@ function applyEvent(stats, ev) {
   return unlocked;
 }
 
-// Serialize read-modify-write cycles.
-let chain = Promise.resolve();
 function recordEvent(ev) {
   const run = () =>
     new Promise((resolve) => {
@@ -87,6 +88,31 @@ function recordEvent(ev) {
   return p;
 }
 
+// --- disliked-id memory ---------------------------------------------------------------
+// Map of commentId -> unix ms. Capped so storage never grows without bound.
+
+const MAX_REMEMBERED = 20000;
+
+function rememberDisliked(id) {
+  if (!id) return Promise.resolve();
+  const run = () => new Promise((resolve) => {
+    chrome.storage.local.get({ dislikedIds: {} }, (items) => {
+      const ids = items.dislikedIds || {};
+      if (ids[id]) return resolve();
+      ids[id] = Date.now();
+      const keys = Object.keys(ids);
+      if (keys.length > MAX_REMEMBERED) {
+        keys.sort((a, b) => ids[a] - ids[b]);
+        for (const k of keys.slice(0, keys.length - MAX_REMEMBERED)) delete ids[k];
+      }
+      chrome.storage.local.set({ dislikedIds: ids }, resolve);
+    });
+  });
+  const p = chain.then(run, run);
+  chain = p.catch(() => {});
+  return p;
+}
+
 // --- messages ---------------------------------------------------------------
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
@@ -101,12 +127,18 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   }
 
   if (msg.type === 'ytcf:event') {
-    recordEvent(msg).then(sendResponse);
+    const remember = msg.kind === 'disliked' ? rememberDisliked(msg.commentId) : Promise.resolve();
+    remember.then(() => recordEvent(msg)).then(sendResponse);
     return true; // async response
   }
 
+  if (msg.type === 'ytcf:remember') {
+    rememberDisliked(msg.commentId).then(() => sendResponse({ ok: true }));
+    return true;
+  }
+
   if (msg.type === 'ytcf:resetStats') {
-    chrome.storage.local.set({ stats: self.YTCF_EMPTY_STATS() }, () => sendResponse({ ok: true }));
+    chrome.storage.local.set({ stats: self.YTCF_EMPTY_STATS(), dislikedIds: {} }, () => sendResponse({ ok: true }));
     return true;
   }
   return false;
