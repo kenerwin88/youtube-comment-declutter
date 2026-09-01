@@ -8,11 +8,11 @@
   const YEAR = '(?:19|20)\\d\\d';
   const DATE = `(?:${MONTH}(?:\\W+${YEAR})?|${YEAR})`;
   const WHO = "(?:any\\s*(?:one|body)(?:\\s+else)?|who(?:'?s|\\s+is|\\s+else(?:\\s+is)?)?)";
-  const HERE = '(?:here|watching|listening|still\\s+here|still\\s+watching|still\\s+listening|vibing|around|alive|reading|seeing)';
+  const HERE = '(?:here|watching|listening|still\\s+here|still\\s+watching|still\\s+listening|vibing|around|alive)';
 
   root.YTCF_DEFAULT_PATTERNS = [
-    // "anyone 2026?", "anybody september 2026??", "anyone in 2026"
-    { name: 'anyone + date', source: `^\\W*${WHO}\\W*(?:in|from|here\\s+in|still\\s+here\\s+in|still\\s+in)?\\W*${DATE}\\W*$` },
+    // "anyone 2026?", "anybody september 2026??", "anyone in 2026", "who is here august 2026?"
+    { name: 'anyone + date', source: `^\\W*${WHO}\\W*(?:still\\s+)?(?:${HERE}\\s*)?(?:in|from|since)?\\W*${DATE}\\W*$` },
     // "anyone still here in 2026?", "who's watching in september 2026", "who else is listening in 2026"
     { name: 'who is watching in <date>', source: `\\b${WHO}\\b[^.!?\\n]{0,40}\\b${HERE}\\b[^.!?\\n]{0,30}\\b(?:in|from|during)\\s+${DATE}\\b` },
     // "2026 anyone?", "september 2026 anyone??", "2026 and still here"
